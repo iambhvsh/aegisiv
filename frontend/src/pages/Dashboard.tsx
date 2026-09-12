@@ -59,9 +59,9 @@ export default function Dashboard() {
       )}
 
       {activeAlerts.map(alert => (
-        <Alert key={alert.id} variant="destructive" className="bg-red-50 border-y-red-200 md:border-red-200 text-red-900 w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 rounded-none md:rounded-lg border-x-0 md:border-x px-4 md:px-4">
-          <AlertTriangle className="h-5 w-5 text-red-600" />
-          <div className="flex flex-row justify-between items-center w-full ml-2 gap-2 sm:gap-4">
+        <Alert key={alert.id} variant="destructive" className="bg-red-50 border-red-200 text-red-900">
+          <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5 sm:mt-0" />
+          <div className="flex flex-row justify-between items-center w-full ml-1 sm:ml-2 gap-2 sm:gap-4">
             <div>
               <AlertTitle className="text-red-800 font-semibold">{alert.bedId} - {alert.type}</AlertTitle>
               <AlertDescription className="text-red-700 text-xs sm:text-sm">{alert.message}</AlertDescription>

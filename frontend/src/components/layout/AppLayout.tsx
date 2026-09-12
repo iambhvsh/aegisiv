@@ -3,7 +3,7 @@ import { LayoutDashboard, BedDouble, Bell, Activity } from "lucide-react";
 
 export function AppLayout() {
   return (
-    <div className="h-screen bg-slate-50 flex flex-col md:flex-row overflow-hidden font-sans relative">
+    <div className="h-screen w-full bg-slate-50 flex flex-col md:flex-row overflow-hidden font-sans relative">
       {/* Mobile Top Header */}
       <header className="md:hidden h-16 shrink-0 bg-white border-b border-slate-200 flex items-center px-4 justify-between z-10">
         <h1 className="text-xl font-bold tracking-tight text-slate-900">AegisIV</h1>
