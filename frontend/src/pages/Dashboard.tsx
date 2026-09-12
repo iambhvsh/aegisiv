@@ -37,14 +37,14 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Dashboard</h1>
           <p className="text-slate-500 mt-1">Real-time IV monitoring across all wards.</p>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={resetSystem}>Reset System</Button>
-          <Button onClick={() => navigate("/beds")}>View All Beds</Button>
+        <div className="flex w-full sm:w-auto gap-3">
+          <Button variant="outline" className="flex-1 sm:flex-none" onClick={resetSystem}>Reset System</Button>
+          <Button onClick={() => navigate("/beds")} className="flex-1 sm:flex-none">View All Beds</Button>
         </div>
       </div>
 
@@ -59,14 +59,14 @@ export default function Dashboard() {
       )}
 
       {activeAlerts.map(alert => (
-        <Alert key={alert.id} variant="destructive" className="bg-red-50 border-red-200 text-red-900">
-          <AlertTriangle className="h-5 w-5 text-red-600" />
-          <div className="flex justify-between items-center w-full ml-2">
+        <Alert key={alert.id} variant="destructive" className="bg-red-50 border-y-red-200 md:border-red-200 text-red-900 -mx-4 md:mx-0 rounded-none md:rounded-lg border-x-0 md:border-x">
+          <AlertTriangle className="h-5 w-5 text-red-600 mt-1 sm:mt-0" />
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full ml-1 sm:ml-2 gap-3 sm:gap-4">
             <div>
               <AlertTitle className="text-red-800 font-semibold">{alert.bedId} - {alert.type}</AlertTitle>
               <AlertDescription className="text-red-700">{alert.message}</AlertDescription>
             </div>
-            <Button variant="destructive" size="sm" onClick={() => acknowledgeAlert(alert.id)}>
+            <Button variant="destructive" size="sm" className="w-full sm:w-auto shrink-0 shadow-sm" onClick={() => acknowledgeAlert(alert.id)}>
               Acknowledge
             </Button>
           </div>
@@ -101,7 +101,7 @@ export default function Dashboard() {
                   </div>
                   <div className="text-right flex items-center gap-6">
                     <div className="w-20 h-8 hidden sm:block opacity-50">
-                      <ResponsiveContainer width="100%" height="100%">
+                      <ResponsiveContainer width="99%" height={32}>
                         <LineChart data={generateSparkline(bed.percentage)}>
                           <YAxis domain={[0, 100]} hide />
                           <Line type="monotone" dataKey="v" stroke="#64748b" strokeWidth={2.5} dot={false} isAnimationActive={false} />
