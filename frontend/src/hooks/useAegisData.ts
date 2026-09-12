@@ -76,7 +76,44 @@ export function useAegisData() {
     };
   }, []);
 
+  useEffect(() => {
+    if (isConnected || beds.length === 0) return;
+
+    const interval = setInterval(() => {
+      setBeds(prev => prev.map(bed => {
+        if (bed.status === "OFFLINE" || bed.percentage <= 0) return bed;
+        
+        // Randomly drop the IV bag percentage by a tiny amount
+        const randomArray = new Uint32Array(1);
+        window.crypto.getRandomValues(randomArray);
+        const randomDecimal = randomArray[0] / 4294967295;
+        let newP = bed.percentage - (randomDecimal * 0.4 + 0.1);
+        if (newP < 0) newP = 0;
+        
+        let newStatus: "NORMAL" | "LOW" | "CRITICAL" | "OFFLINE";
+        if (newP < 15) newStatus = "CRITICAL";
+        else if (newP < 35) newStatus = "LOW";
+        else newStatus = "NORMAL";
+
+        return {
+          ...bed,
+          percentage: Number(newP.toFixed(1)),
+          status: newStatus,
+          timeRemainingMs: newP * 60000,
+          lastUpdated: Date.now()
+        };
+      }));
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [isConnected, beds.length]);
+
   const acknowledgeAlert = async (alertId: string) => {
+    // Optimistic UI update: instantly hide the alert before API resolves
+    setAlerts(prev => prev.map(a => 
+      a.id === alertId ? { ...a, acknowledged: true, acknowledgedAt: Date.now() } : a
+    ));
+
     try {
       const baseUrl = import.meta.env.VITE_API_URL || "";
       await fetch(`${baseUrl}/api/alerts/${alertId}/acknowledge`, {
@@ -93,6 +130,15 @@ export function useAegisData() {
       await fetch(`${baseUrl}/api/system/reset`, {
         method: "POST",
       });
+      // Force refresh data
+      const [bedsRes, alertsRes] = await Promise.all([
+        fetch(`${baseUrl}/api/beds`),
+        fetch(`${baseUrl}/api/alerts`)
+      ]);
+      if (bedsRes.ok && alertsRes.ok) {
+        setBeds(await bedsRes.json());
+        setAlerts(await alertsRes.json());
+      }
     } catch (error) {
       console.error("Failed to reset system:", error);
     }
