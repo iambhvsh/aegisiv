@@ -6,7 +6,7 @@ const app = express();
 app.disable("x-powered-by");
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: true }));
 app.use(express.json());
 
 // Initialize the system
@@ -42,7 +42,9 @@ app.get("/api/stream", (req, res) => {
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
-  res.flushHeaders(); // flush the headers to establish SSE
+  if (typeof res.flushHeaders === "function") {
+    res.flushHeaders(); // Safely call flushHeaders (Vercel serverless doesn't support this natively)
+  }
 
   // Send initial data
   res.write(`data: ${JSON.stringify({ beds: getBeds(), alerts: getAlerts() })}\n\n`);
