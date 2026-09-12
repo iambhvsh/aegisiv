@@ -8,12 +8,16 @@ import { Badge } from "../components/ui/badge";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useState, useEffect } from "react";
 import { Spinner } from "../components/ui/spinner";
+import { useTheme } from "../components/theme-provider";
 
 export default function BedDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { beds, alerts, acknowledgeAlert, isLoading } = useAegisData();
+  const { theme } = useTheme();
   const [history, setHistory] = useState<{ time: string, percentage: number }[]>([]);
+
+  const isDarkMode = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
 
   const bed = beds.find(b => b.id === id);
   const activeAlert = alerts.find(a => a.bedId === id && !a.acknowledged);
@@ -45,17 +49,17 @@ export default function BedDetails() {
   }, [bed?.percentage, bed?.id]);
 
   const getProgressBarColor = (status: string) => {
-    if (status === "NORMAL") return "text-emerald-500 transition-all duration-1000";
-    if (status === "LOW") return "text-amber-500 transition-all duration-1000";
-    if (status === "CRITICAL") return "text-red-500 transition-all duration-1000";
-    return "text-slate-300 transition-all duration-1000";
+    if (status === "NORMAL") return "text-emerald-500 dark:text-emerald-400 transition-all duration-1000";
+    if (status === "LOW") return "text-amber-500 dark:text-amber-400 transition-all duration-1000";
+    if (status === "CRITICAL") return "text-red-500 dark:text-red-500 transition-all duration-1000";
+    return "text-slate-300 dark:text-slate-600 transition-all duration-1000";
   };
 
   const getBadgeClassName = (status: string) => {
-    if (status === "NORMAL") return "bg-emerald-100 text-emerald-800 hover:bg-emerald-100";
-    if (status === "LOW") return "bg-amber-100 text-amber-800 hover:bg-amber-100";
-    if (status === "CRITICAL") return "bg-red-100 text-red-800 hover:bg-red-100 animate-pulse";
-    return "bg-slate-100 text-slate-800 hover:bg-slate-100";
+    if (status === "NORMAL") return "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 border-none";
+    if (status === "LOW") return "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40 border-none";
+    if (status === "CRITICAL") return "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 border-none animate-pulse";
+    return "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border-none";
   };
 
   const getLineChartColor = (status: string) => {
@@ -75,8 +79,8 @@ export default function BedDetails() {
   if (!bed) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] space-y-4 animate-in fade-in">
-        <h2 className="text-2xl font-bold text-slate-700">Bed Not Found</h2>
-        <Button onClick={() => navigate("/beds")} variant="outline">Back to Beds</Button>
+        <h2 className="text-2xl font-bold text-slate-700 dark:text-slate-300">Bed Not Found</h2>
+        <Button onClick={() => navigate("/beds")} variant="outline" className="dark:border-slate-700 dark:text-slate-300">Back to Beds</Button>
       </div>
     );
   }
@@ -84,44 +88,44 @@ export default function BedDetails() {
   const isOffline = bed.status === "OFFLINE";
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 pb-20">
+    <div className="space-y-6 animate-in fade-in duration-500 pb-20 relative z-10">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate("/beds")} className="shrink-0">
+        <Button variant="ghost" size="icon" onClick={() => navigate("/beds")} className="shrink-0 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100">
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">{bed.id}</h1>
-          <p className="text-slate-500 mt-1 flex flex-wrap items-center gap-2 text-sm md:text-base">
-            <span>Device: <span className="font-medium text-slate-700">{bed.deviceId}</span></span>
-            <span className="text-slate-300 hidden sm:inline">•</span>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">{bed.id}</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1 flex flex-wrap items-center gap-2 text-sm md:text-base">
+            <span>Device: <span className="font-medium text-slate-700 dark:text-slate-300">{bed.deviceId}</span></span>
+            <span className="text-slate-300 dark:text-slate-600 hidden sm:inline">•</span>
             <span>Last updated: {new Date(bed.lastUpdated).toLocaleTimeString()}</span>
           </p>
         </div>
       </div>
 
       {isOffline && (
-        <Alert variant="destructive" className="bg-slate-50 border-slate-200 text-slate-800">
-          <WifiOff className="h-5 w-5 text-slate-500" />
-          <AlertTitle className="text-slate-900 font-semibold">Device Offline</AlertTitle>
-          <AlertDescription className="text-slate-600 mt-2 space-y-2">
+        <Alert variant="destructive" className="bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 shadow-sm">
+          <WifiOff className="h-5 w-5 text-slate-500 dark:text-slate-400" />
+          <AlertTitle className="text-slate-900 dark:text-slate-100 font-semibold">Device Offline</AlertTitle>
+          <AlertDescription className="text-slate-600 dark:text-slate-400 mt-2 space-y-2">
             <p>Connection to the device has been lost. Last known IV level was {bed.percentage}%.</p>
-            <div className="bg-white p-3 rounded-md border border-slate-200 text-sm flex flex-col gap-2">
-              <p className="flex items-center gap-2"><AlertTriangle size={16} className="text-amber-500" /> Local Buzzer + LED Alert activated on device</p>
-              <p className="flex items-center gap-2 font-medium text-emerald-700"><CheckCircle2 size={16} /> IV flow continues normally</p>
+            <div className="bg-white dark:bg-slate-950 p-3 rounded-md border border-slate-200 dark:border-slate-800 text-sm flex flex-col gap-2 shadow-sm">
+              <p className="flex items-center gap-2"><AlertTriangle size={16} className="text-amber-500 dark:text-amber-600" /> Local Buzzer + LED Alert activated on device</p>
+              <p className="flex items-center gap-2 font-medium text-emerald-700 dark:text-emerald-500"><CheckCircle2 size={16} /> IV flow continues normally</p>
             </div>
           </AlertDescription>
         </Alert>
       )}
 
       {activeAlert && (
-        <Alert variant="destructive" className="bg-red-50 border-red-200 text-red-900">
-          <AlertTriangle className="h-6 w-6 text-red-600" />
+        <Alert variant="destructive" className="bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-900/50 text-red-900 dark:text-red-200 shadow-md">
+          <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-500" />
           <div className="flex justify-between items-center w-full ml-3">
             <div>
-              <AlertTitle className="text-red-800 font-bold text-lg">{activeAlert.type} ALERT</AlertTitle>
-              <AlertDescription className="text-red-700 text-base">{activeAlert.message}</AlertDescription>
+              <AlertTitle className="text-red-800 dark:text-red-300 font-bold text-lg">{activeAlert.type} ALERT</AlertTitle>
+              <AlertDescription className="text-red-700 dark:text-red-400 text-base">{activeAlert.message}</AlertDescription>
             </div>
-            <Button variant="destructive" size="lg" className="font-semibold shadow-sm" onClick={() => acknowledgeAlert(activeAlert.id)}>
+            <Button variant="destructive" size="lg" className="font-semibold shadow-sm hover:scale-105 transition-transform" onClick={() => acknowledgeAlert(activeAlert.id)}>
               Acknowledge Alert
             </Button>
           </div>
@@ -129,14 +133,14 @@ export default function BedDetails() {
       )}
 
       <div className="grid gap-6 md:grid-cols-3">
-        <Card className="md:col-span-1 shadow-sm border-slate-200">
+        <Card className="md:col-span-1 shadow-md dark:shadow-xl/10 border-slate-200 dark:border-slate-800/60 bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm transition-all hover:scale-[1.01]">
           <CardHeader>
-            <CardTitle>Current Status</CardTitle>
+            <CardTitle className="dark:text-slate-200">Current Status</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center py-6">
             <div className="relative mb-6">
               <svg className="w-48 h-48 transform -rotate-90">
-                <circle cx="96" cy="96" r="88" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-slate-100" />
+                <circle cx="96" cy="96" r="88" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-slate-100 dark:text-slate-800" />
                 <circle 
                   cx="96" cy="96" r="88" 
                   stroke="currentColor" 
@@ -149,7 +153,7 @@ export default function BedDetails() {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-5xl font-bold tracking-tighter text-slate-800">{isOffline ? "--" : bed.percentage}<span className="text-2xl text-slate-400">%</span></span>
+                <span className="text-5xl font-bold tracking-tighter text-slate-800 dark:text-slate-100">{isOffline ? "--" : bed.percentage}<span className="text-2xl text-slate-400 dark:text-slate-500">%</span></span>
               </div>
             </div>
             
@@ -158,44 +162,50 @@ export default function BedDetails() {
             </Badge>
 
             <div className="w-full mt-8 grid grid-cols-2 gap-4 text-center">
-              <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
-                <p className="text-xs text-slate-500 font-medium mb-1 uppercase tracking-wider flex items-center justify-center gap-1"><Clock size={14}/> Est. Time</p>
-                <p className="text-lg font-bold text-slate-800">{isOffline ? "--" : `${Math.round(bed.timeRemainingMs / 60000)} min`}</p>
+              <div className="bg-slate-50 dark:bg-slate-950/50 rounded-xl p-3 border border-slate-100 dark:border-slate-800 shadow-sm">
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1 uppercase tracking-wider flex items-center justify-center gap-1"><Clock size={14}/> Est. Time</p>
+                <p className="text-lg font-bold text-slate-800 dark:text-slate-200">{isOffline ? "--" : `${Math.round(bed.timeRemainingMs / 60000)} min`}</p>
               </div>
-              <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
-                <p className="text-xs text-slate-500 font-medium mb-1 uppercase tracking-wider flex items-center justify-center gap-1"><Activity size={14}/> Flow Rate</p>
-                <p className="text-lg font-bold text-slate-800">{isOffline ? "--" : "Steady"}</p>
+              <div className="bg-slate-50 dark:bg-slate-950/50 rounded-xl p-3 border border-slate-100 dark:border-slate-800 shadow-sm">
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1 uppercase tracking-wider flex items-center justify-center gap-1"><Activity size={14}/> Flow Rate</p>
+                <p className="text-lg font-bold text-slate-800 dark:text-slate-200">{isOffline ? "--" : "Steady"}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-2 shadow-sm border-slate-200">
+        <Card className="md:col-span-2 shadow-md dark:shadow-xl/10 border-slate-200 dark:border-slate-800/60 bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm transition-all hover:scale-[1.01]">
           <CardHeader>
-            <CardTitle>IV Level Trend</CardTitle>
-            <CardDescription>Live telemetry over time</CardDescription>
+            <CardTitle className="dark:text-slate-200">IV Level Trend</CardTitle>
+            <CardDescription className="dark:text-slate-400">Live telemetry over time</CardDescription>
           </CardHeader>
           <CardContent className="h-[350px] md:h-[400px] w-full min-h-[300px]">
             <ResponsiveContainer width="99%" height="100%">
               <LineChart data={history} margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDarkMode ? "#334155" : "#e2e8f0"} />
                 <XAxis 
                   dataKey="time" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: '#64748b', fontSize: 12 }} 
+                  tick={{ fill: isDarkMode ? '#94a3b8' : '#64748b', fontSize: 12 }} 
                   dy={10}
                 />
                 <YAxis 
                   domain={[0, 100]} 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: '#64748b', fontSize: 12 }} 
+                  tick={{ fill: isDarkMode ? '#94a3b8' : '#64748b', fontSize: 12 }} 
                   dx={-10}
                 />
                 <Tooltip 
-                  contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                  itemStyle={{ color: '#0f172a', fontWeight: 'bold' }}
+                  contentStyle={{ 
+                    borderRadius: '8px', 
+                    border: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0', 
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                    backgroundColor: isDarkMode ? '#0f172a' : '#ffffff',
+                    color: isDarkMode ? '#f1f5f9' : '#0f172a'
+                  }}
+                  itemStyle={{ color: isDarkMode ? '#f1f5f9' : '#0f172a', fontWeight: 'bold' }}
                 />
                 <Line 
                   type="monotone" 
@@ -203,7 +213,7 @@ export default function BedDetails() {
                   stroke={getLineChartColor(bed.status)} 
                   strokeWidth={3} 
                   dot={false}
-                  activeDot={{ r: 6, strokeWidth: 0 }}
+                  activeDot={{ r: 6, strokeWidth: 0, fill: getLineChartColor(bed.status) }}
                   isAnimationActive={false}
                 />
               </LineChart>
