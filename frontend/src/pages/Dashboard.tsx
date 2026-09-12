@@ -59,14 +59,14 @@ export default function Dashboard() {
       )}
 
       {activeAlerts.map(alert => (
-        <Alert key={alert.id} variant="destructive" className="bg-red-50 border-y-red-200 md:border-red-200 text-red-900 -mx-4 md:mx-0 rounded-none md:rounded-lg border-x-0 md:border-x">
-          <AlertTriangle className="h-5 w-5 text-red-600 mt-1 sm:mt-0" />
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full ml-1 sm:ml-2 gap-3 sm:gap-4">
+        <Alert key={alert.id} variant="destructive" className="bg-red-50 border-y-red-200 md:border-red-200 text-red-900 w-[calc(100%+2rem)] -mx-4 md:w-full md:mx-0 rounded-none md:rounded-lg border-x-0 md:border-x px-4 md:px-4">
+          <AlertTriangle className="h-5 w-5 text-red-600" />
+          <div className="flex flex-row justify-between items-center w-full ml-2 gap-2 sm:gap-4">
             <div>
               <AlertTitle className="text-red-800 font-semibold">{alert.bedId} - {alert.type}</AlertTitle>
-              <AlertDescription className="text-red-700">{alert.message}</AlertDescription>
+              <AlertDescription className="text-red-700 text-xs sm:text-sm">{alert.message}</AlertDescription>
             </div>
-            <Button variant="destructive" size="sm" className="w-full sm:w-auto shrink-0 shadow-sm" onClick={() => acknowledgeAlert(alert.id)}>
+            <Button variant="destructive" size="sm" className="shrink-0 shadow-sm text-xs sm:text-sm px-3 sm:px-4" onClick={() => acknowledgeAlert(alert.id)}>
               Acknowledge
             </Button>
           </div>
@@ -101,7 +101,7 @@ export default function Dashboard() {
                   </div>
                   <div className="text-right flex items-center gap-6">
                     <div className="w-20 h-8 hidden sm:block opacity-50">
-                      <ResponsiveContainer width="99%" height={32}>
+                      <ResponsiveContainer width="99%" height={32} minWidth={1} minHeight={1}>
                         <LineChart data={generateSparkline(bed.percentage)}>
                           <YAxis domain={[0, 100]} hide />
                           <Line type="monotone" dataKey="v" stroke="#64748b" strokeWidth={2.5} dot={false} isAnimationActive={false} />
@@ -119,11 +119,11 @@ export default function Dashboard() {
           </CardContent>
         </Card>
         
-        <Card className="shadow-sm border-slate-200">
-          <CardHeader>
+        <Card className="shadow-sm border-slate-200 w-[calc(100%+2rem)] -mx-4 md:w-auto md:mx-0 rounded-none md:rounded-lg border-x-0 md:border-x">
+          <CardHeader className="px-4 md:px-6">
             <CardTitle className="text-lg font-medium">Critical Attention</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4 md:px-6">
             {critical === 0 && activeAlerts.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-slate-400">
                 <CheckCircle2 size={48} className="mb-4 text-emerald-200" />
