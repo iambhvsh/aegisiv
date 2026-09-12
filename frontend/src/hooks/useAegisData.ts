@@ -27,6 +27,25 @@ export function useAegisData() {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
+    // 1. Instantly fetch initial data (Crucial for Vercel Serverless which buffers SSE)
+    const fetchInitialData = async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_API_URL || "";
+        const [bedsRes, alertsRes] = await Promise.all([
+          fetch(`${baseUrl}/api/beds`),
+          fetch(`${baseUrl}/api/alerts`)
+        ]);
+        if (bedsRes.ok && alertsRes.ok) {
+          setBeds(await bedsRes.json());
+          setAlerts(await alertsRes.json());
+        }
+      } catch (e) {
+        console.error("Failed to fetch initial data", e);
+      }
+    };
+    fetchInitialData();
+
+    // 2. Establish SSE Connection
     const eventSource = new EventSource(import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/stream` : "/api/stream");
 
     eventSource.onopen = () => {
