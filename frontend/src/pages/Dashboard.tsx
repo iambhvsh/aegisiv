@@ -81,8 +81,7 @@ export default function Dashboard() {
         <StatCard title="Offline" value={offline} icon={<WifiOff size={20} />} color="slate" />
       </div>
       
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="col-span-2 shadow-sm border-slate-200 flex flex-col max-h-[650px]">
+        <Card className="md:col-span-2 lg:col-span-2 shadow-sm border-slate-200 flex flex-col max-h-[650px]">
           <CardHeader className="shrink-0 border-b border-slate-100 pb-4">
             <CardTitle className="text-lg font-medium">Live Status (All Beds)</CardTitle>
           </CardHeader>
@@ -119,7 +118,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
         
-        <Card className="shadow-sm border-slate-200 w-[calc(100%+2rem)] -mx-4 md:w-auto md:mx-0 rounded-none md:rounded-lg border-x-0 md:border-x">
+        <Card className="shadow-sm border-slate-200">
           <CardHeader className="px-4 md:px-6">
             <CardTitle className="text-lg font-medium">Critical Attention</CardTitle>
           </CardHeader>
