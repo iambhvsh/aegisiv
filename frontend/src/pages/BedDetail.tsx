@@ -81,11 +81,11 @@ export default function BedDetails() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">{bed.id}</h1>
-          <p className="text-slate-500 mt-1 flex items-center gap-2">
-            Device: <span className="font-medium text-slate-700">{bed.deviceId}</span>
-            <span className="text-slate-300">•</span>
-            Last updated: {new Date(bed.lastUpdated).toLocaleTimeString()}
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">{bed.id}</h1>
+          <p className="text-slate-500 mt-1 flex flex-wrap items-center gap-2 text-sm md:text-base">
+            <span>Device: <span className="font-medium text-slate-700">{bed.deviceId}</span></span>
+            <span className="text-slate-300 hidden sm:inline">•</span>
+            <span>Last updated: {new Date(bed.lastUpdated).toLocaleTimeString()}</span>
           </p>
         </div>
       </div>
@@ -166,8 +166,8 @@ export default function BedDetails() {
             <CardTitle>IV Level Trend</CardTitle>
             <CardDescription>Live telemetry over time</CardDescription>
           </CardHeader>
-          <CardContent className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
+          <CardContent className="h-[350px] md:h-[400px] w-full min-h-[300px]">
+            <ResponsiveContainer width="99%" height="100%">
               <LineChart data={history} margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                 <XAxis 

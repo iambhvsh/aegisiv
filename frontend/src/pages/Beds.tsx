@@ -72,60 +72,62 @@ export default function Beds() {
       </div>
 
       <div className="rounded-md border border-slate-200 shadow-sm bg-white overflow-hidden">
-        <Table>
-          <TableHeader className="bg-slate-50">
-            <TableRow>
-              <TableHead className="font-semibold text-slate-700">Bed ID</TableHead>
-              <TableHead className="font-semibold text-slate-700">Device ID</TableHead>
-              <TableHead className="font-semibold text-slate-700">IV Remaining</TableHead>
-              <TableHead className="font-semibold text-slate-700">Status</TableHead>
-              <TableHead className="font-semibold text-slate-700">Est. Time</TableHead>
-              <TableHead className="font-semibold text-slate-700">Last Updated</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredBeds.length === 0 ? (
+        <div className="overflow-x-auto w-full">
+          <Table className="min-w-[750px]">
+            <TableHeader className="bg-slate-50">
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-12 text-slate-500">
-                  No beds found matching your criteria.
-                </TableCell>
+                <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Bed ID</TableHead>
+                <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Device ID</TableHead>
+                <TableHead className="font-semibold text-slate-700 whitespace-nowrap min-w-[150px]">IV Remaining</TableHead>
+                <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Status</TableHead>
+                <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Est. Time</TableHead>
+                <TableHead className="font-semibold text-slate-700 whitespace-nowrap">Last Updated</TableHead>
               </TableRow>
-            ) : (
-              filteredBeds.map((bed) => (
-                <TableRow 
-                  key={bed.id} 
-                  className="cursor-pointer hover:bg-slate-50"
-                  onClick={() => navigate(`/beds/${bed.id}`)}
-                >
-                  <TableCell className="font-medium text-slate-900">{bed.id}</TableCell>
-                  <TableCell className="text-slate-500">{bed.deviceId}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium w-8">{bed.percentage}%</span>
-                      <div className="w-24 h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full rounded-full transition-all duration-500 ${getProgressBarColor(bed.percentage)}`}
-                          style={{ width: `${Math.max(bed.percentage, 0)}%` }}
-                        />
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={getBadgeVariant(bed.status) as any} className={getBadgeClassName(bed.status)}>
-                      {bed.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-slate-600">
-                    {bed.status === "OFFLINE" ? "Unknown" : `${Math.round(bed.timeRemainingMs / 60000)} min`}
-                  </TableCell>
-                  <TableCell className="text-slate-500 text-sm">
-                    {new Date(bed.lastUpdated).toLocaleTimeString()}
+            </TableHeader>
+            <TableBody>
+              {filteredBeds.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-12 text-slate-500">
+                    No beds found matching your criteria.
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                filteredBeds.map((bed) => (
+                  <TableRow 
+                    key={bed.id} 
+                    className="cursor-pointer hover:bg-slate-50"
+                    onClick={() => navigate(`/beds/${bed.id}`)}
+                  >
+                    <TableCell className="font-medium text-slate-900 whitespace-nowrap">{bed.id}</TableCell>
+                    <TableCell className="text-slate-500 whitespace-nowrap">{bed.deviceId}</TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium w-9">{bed.percentage}%</span>
+                        <div className="w-24 h-2 bg-slate-100 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full rounded-full transition-all duration-500 ${getProgressBarColor(bed.percentage)}`}
+                            style={{ width: `${Math.max(bed.percentage, 0)}%` }}
+                          />
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      <Badge variant={getBadgeVariant(bed.status) as any} className={getBadgeClassName(bed.status)}>
+                        {bed.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-slate-600 whitespace-nowrap">
+                      {bed.status === "OFFLINE" ? "Unknown" : `${Math.round(bed.timeRemainingMs / 60000)} min`}
+                    </TableCell>
+                    <TableCell className="text-slate-500 text-sm whitespace-nowrap">
+                      {new Date(bed.lastUpdated).toLocaleTimeString()}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );
