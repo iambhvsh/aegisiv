@@ -1,6 +1,6 @@
 export function Spinner({ className = "" }: Readonly<{ className?: string }>) {
   return (
-    <svg className={`ios-spinner animate-spin text-slate-400 ${className}`} viewBox="0 0 50 50" width="50" height="50">
+    <svg className={`spinner animate-spin text-slate-400 ${className}`} viewBox="0 0 50 50" width="50" height="50">
       <g stroke="currentColor" strokeWidth="4" strokeLinecap="round">
         <line x1="25" y1="10" x2="25" y2="18" opacity="1" transform="rotate(0 25 25)" />
         <line x1="25" y1="10" x2="25" y2="18" opacity="0.91" transform="rotate(30 25 25)" />
