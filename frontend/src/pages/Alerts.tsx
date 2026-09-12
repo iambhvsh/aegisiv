@@ -1,9 +1,18 @@
 import { useAegisData } from "../hooks/useAegisData";
 import { AlertTriangle, CheckCircle2, Info } from "lucide-react";
 import { Button } from "../components/ui/button";
+import { Spinner } from "../components/ui/spinner";
 
 export default function Alerts() {
-  const { alerts, acknowledgeAlert } = useAegisData();
+  const { alerts, acknowledgeAlert, isLoading } = useAegisData();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <Spinner />
+      </div>
+    );
+  }
 
   const activeAlerts = alerts.filter(a => !a.acknowledged).sort((a, b) => b.timestamp - a.timestamp);
   const resolvedAlerts = alerts.filter(a => a.acknowledged).sort((a, b) => b.timestamp - a.timestamp).slice(0, 10);

@@ -7,11 +7,12 @@ import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
 import { Badge } from "../components/ui/badge";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useState, useEffect } from "react";
+import { Spinner } from "../components/ui/spinner";
 
 export default function BedDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { beds, alerts, acknowledgeAlert } = useAegisData();
+  const { beds, alerts, acknowledgeAlert, isLoading } = useAegisData();
   const [history, setHistory] = useState<{ time: string, percentage: number }[]>([]);
 
   const bed = beds.find(b => b.id === id);
@@ -62,6 +63,14 @@ export default function BedDetails() {
     if (status === 'LOW') return '#f59e0b';
     return '#10b981';
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <Spinner />
+      </div>
+    );
+  }
 
   if (!bed) {
     return (

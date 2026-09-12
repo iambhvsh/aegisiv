@@ -4,12 +4,21 @@ import { Badge } from "../components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Search, Filter } from "lucide-react";
+import { Spinner } from "../components/ui/spinner";
 
 export default function Beds() {
-  const { beds } = useAegisData();
+  const { beds, isLoading } = useAegisData();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("ALL");
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <Spinner />
+      </div>
+    );
+  }
 
   const filteredBeds = beds.filter(bed => {
     const matchesSearch = bed.id.toLowerCase().includes(search.toLowerCase()) || bed.deviceId.toLowerCase().includes(search.toLowerCase());

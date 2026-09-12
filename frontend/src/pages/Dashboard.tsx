@@ -5,10 +5,19 @@ import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
 import { Button } from "../components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, ResponsiveContainer, YAxis } from "recharts";
+import { Spinner } from "../components/ui/spinner";
 
 export default function Dashboard() {
-  const { beds, alerts, isConnected, acknowledgeAlert, resetSystem } = useAegisData();
+  const { beds, alerts, isConnected, isLoading, acknowledgeAlert, resetSystem } = useAegisData();
   const navigate = useNavigate();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <Spinner />
+      </div>
+    );
+  }
 
   const getStatusColor = (status: string) => {
     if (status === "NORMAL") return "text-emerald-600";

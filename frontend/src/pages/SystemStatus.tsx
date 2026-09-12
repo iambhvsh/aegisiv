@@ -2,9 +2,18 @@ import { useAegisData } from "../hooks/useAegisData";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { AlertTriangle, Server, Wifi, WifiOff } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
+import { Spinner } from "../components/ui/spinner";
 
 export default function SystemStatus() {
-  const { isConnected } = useAegisData();
+  const { isConnected, isLoading } = useAegisData();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">

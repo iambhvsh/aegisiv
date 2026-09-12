@@ -25,6 +25,7 @@ export function useAegisData() {
   const [beds, setBeds] = useState<Bed[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [isConnected, setIsConnected] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // 1. Instantly fetch initial data (Crucial for Vercel Serverless which buffers SSE)
@@ -41,6 +42,8 @@ export function useAegisData() {
         }
       } catch (e) {
         console.error("Failed to fetch initial data", e);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchInitialData();
@@ -109,7 +112,6 @@ export function useAegisData() {
   }, [isConnected, beds.length]);
 
   const acknowledgeAlert = async (alertId: string) => {
-    // Optimistic UI update: instantly hide the alert before API resolves
     setAlerts(prev => prev.map(a => 
       a.id === alertId ? { ...a, acknowledged: true, acknowledgedAt: Date.now() } : a
     ));
@@ -148,6 +150,7 @@ export function useAegisData() {
     beds,
     alerts,
     isConnected,
+    isLoading,
     acknowledgeAlert,
     resetSystem,
   };
